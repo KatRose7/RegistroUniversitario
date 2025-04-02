@@ -61,4 +61,40 @@ public class EstudianteServiceImpl implements IEstudianteService { // Define la 
                 .numeroInscripcion(estudianteDTO.getNumeroInscripcion()) // Asigna el número de inscripción
                 .build(); // Construye el objeto Estudiante
     }
+
+    public EstudianteDTO obtenerEstudiantePorId(Long id){
+        Estudiante estudiante = estudianteRepository.findById(id);
+        return (estudiante != null) ? convertToDTO(estudiante) : null;
+    }
+
+    public EstudianteDTO actualizarEstudiante(Long id, EstudianteDTO estudiante){
+        Estudiante estudianteA = estudianteRepository.findById(id);
+        if (estudianteA !=null){
+            estudianteA.setNombre(estudiante.getNombre());
+            estudianteA.setApellido(estudiante.getApellido());
+            estudianteA.setEmail(estudiante.getEmail());
+            estudianteA.setFechaNacimiento(estudiante.getFechaNacimiento());
+            estudianteA.setNumeroInscripcion(estudiante.getNumeroInscripcion());
+            Estudiante estudianteB = estudianteRepository.save(estudianteA);
+            return convertToDTO(estudianteB);
+        } else {
+            return null;
+         }
+
+    }
+
+    public EstudianteDTO registrarEstudiante(EstudianteDTO estudianteDTO) {
+        Estudiante estudiante = convertToEntity(estudianteDTO);
+        Estudiante estudianteGuardado = estudianteRepository.save(estudiante);
+        return convertToDTO(estudianteGuardado);
+    }
+
+    public boolean eliminarEstudiante(Long id){
+        Estudiante estudiante = estudianteRepository.findById(id);
+        if(estudiante != null){
+            estudianteRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }

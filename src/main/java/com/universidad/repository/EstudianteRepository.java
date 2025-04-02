@@ -26,6 +26,10 @@ public class EstudianteRepository {
     public List<Estudiante> findAll() { // Método para obtener todos los estudiantes
         return new ArrayList<>(estudiantes.values()); // Retorna una lista de todos los estudiantes en el mapa
     }
+
+    public Estudiante findById(Long id){
+        return estudiantes.get(id);
+    }
     
     public void deleteById(Long id) { // Método para eliminar un estudiante por su ID
         estudiantes.remove(id); // Elimina el estudiante del mapa
@@ -48,8 +52,16 @@ public class EstudianteRepository {
                 .fechaNacimiento(LocalDate.of(2001, 8, 22)) // Asigna la fecha de nacimiento
                 .numeroInscripcion("S002") // Asigna el número de inscripción
                 .build(); // Construye el objeto Estudiante
+        Estudiante estudiante3 = Estudiante.builder() // Crea otro estudiante usando el patrón builder
+                .nombre("Rosita") // Asigna el nombre
+                .apellido("González") // Asigna el apellido
+                .email("rosita.gonzalez@example.com") // Asigna el email
+                .fechaNacimiento(LocalDate.of(2002, 8, 22)) // Asigna la fecha de nacimiento
+                .numeroInscripcion("1911") // Asigna el número de inscripción
+                .build(); // Construye el objeto Estudiante
                 
         save(estudiante1); // Guarda el primer estudiante en el repositorio
         save(estudiante2); // Guarda el segundo estudiante en el repositorio
+        save(estudiante3);
     }
 }

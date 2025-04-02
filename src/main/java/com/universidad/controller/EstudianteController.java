@@ -15,15 +15,52 @@ public class EstudianteController { // Define la clase EstudianteController
 
     private final IEstudianteService estudianteService; // Declara una variable final para el servicio de estudiantes
 
-    @Autowired // Anotación que indica que el constructor debe ser usado para inyección de dependencias
-    public EstudianteController(IEstudianteService estudianteService) { // Constructor que recibe el servicio de estudiantes
+    @Autowired // Anotación que indica que el constructor debe ser usado para inyección de
+               // dependencias
+    public EstudianteController(IEstudianteService estudianteService) { // Constructor que recibe el servicio de
+                                                                        // estudiantes
         this.estudianteService = estudianteService; // Asigna el servicio de estudiantes a la variable de instancia
     }
 
     @GetMapping("/estudiantes") // Anotación que indica que este método maneja solicitudes GET
-    public ResponseEntity<List<EstudianteDTO>> obtenerTodosLosEstudiantes() { // Método para obtener una lista de todos los EstudianteDTO
-        List<EstudianteDTO> estudiantes = estudianteService.obtenerTodosLosEstudiantes(); // Llama al servicio para obtener todos los estudiantes
+    public ResponseEntity<List<EstudianteDTO>> obtenerTodosLosEstudiantes() { // Método para obtener una lista de todos
+                                                                              // los EstudianteDTO
+        List<EstudianteDTO> estudiantes = estudianteService.obtenerTodosLosEstudiantes(); // Llama al servicio para
+                                                                                          // obtener todos los
+                                                                                          // estudiantes
         return ResponseEntity.ok(estudiantes); // Retorna una respuesta HTTP 200 OK con la lista de estudiantes
+    }
+
+    @GetMapping("/estudiante/{id}")
+    public ResponseEntity<EstudianteDTO> obtenerEstudiantePorId(@PathVariable Long id) {
+        EstudianteDTO estudiante = estudianteService.obtenerEstudiantePorId(id);
+        return (estudiante != null) ? ResponseEntity.ok(estudiante) : ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/estudiantes/{id}")
+    public ResponseEntity<EstudianteDTO> actualizarEstudiante(@PathVariable Long id, @RequestBody EstudianteDTO estudianteDTO) {
+        EstudianteDTO estudianteActualizado = estudianteService.actualizarEstudiante(id, estudianteDTO); // estudiante
+        if (estudianteActualizado != null) {
+            return ResponseEntity.ok(estudianteActualizado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/estudiantes")
+    public ResponseEntity<EstudianteDTO> registrarEstudiante(@RequestBody EstudianteDTO estudianteDTO) {
+        EstudianteDTO estudianteGuardado = estudianteService.registrarEstudiante(estudianteDTO);
+        return ResponseEntity.status(201).body(estudianteGuardado);
+    }
+
+    @DeleteMapping("/estudiantes/{id}") // -> endpoint es la ruta 
+    public ResponseEntity<Void> eliminarEstudiante(@PathVariable Long id){
+        boolean eliminado = estudianteService.eliminarEstudiante(id);
+        if(eliminado){
+            return ResponseEntity.noContent().build();
+        }else{
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
